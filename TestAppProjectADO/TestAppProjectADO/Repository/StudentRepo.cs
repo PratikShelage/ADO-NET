@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Npgsql;
 using Repo.IRepositoy;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -271,3 +272,6 @@ namespace Repo.Repository
         }
     }
 }
+
+//after click of view button open one model with all data of student with readonly with bydefault image make it proper se proper color and background color with shodow use bootstrap
+//frist i want to create one filter button with icon after click filter button open model with from and to Date filter with save and close  aloso add the one name and roll number input field and in table change name Date to Addmission date and remove the present absent feild add one feild with view with eye icon after click view icon open model with student profile with all data make it proper with alignment and add proper color and showdoe backgorund color and im also sending the css so you and imporve the css and aslo use bootstrap
