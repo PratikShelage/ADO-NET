@@ -1,0 +1,305 @@
+import { Component, OnInit } from '@angular/core';
+import { countries } from 'src/app/shared/data/countryData';
+import { teleCodes } from 'src/app/shared/data/teleCodeData';
+import { states } from 'src/app/shared/data/StateData';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { CustomValidators } from 'src/app/shared/logic/CustomValidators';
+import { Hobbies } from 'src/app/shared/models/Hobbies.model';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { AuthenticateService } from 'src/app/shared/services/authenticate.service';
+import { ApiService } from 'src/app/shared/services/api.service';
+
+@Component({
+  selector: 'app-registration',
+  templateUrl: './registration.component.html',
+  styleUrls: ['./registration.component.scss'],
+})
+export class RegistrationComponent implements OnInit {
+  constructor(private route: Router, private toastr: ToastrService, private auth: AuthenticateService, private apiService: ApiService) {}
+  loadingHide: boolean = true;
+  //Storing Hobbies
+  HobbiesValues: Array<string> = []; 
+  //Signup Validation
+  signupForm = new FormGroup(
+    {
+      email: new FormControl('', [Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$')]),
+      password: new FormControl('', [Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,16}$')]),
+      confirmPassword: new FormControl(''),
+      picture: new FormControl(),
+      dateOfBirth: new FormControl(),
+      Age: new FormControl(),
+      Gender: new FormControl('', [Validators.required]),
+      About: new FormControl(),
+      Hobbies: new FormControl('',[ Validators.required]),
+      HobbiesValue: new FormControl(this.HobbiesValues),
+      FirstName: new FormControl('', [Validators.pattern('[a-zA-Z]{2,15}')]),
+      MiddleName: new FormControl('', [Validators.pattern('[a-zA-Z]{2,15}')]),
+      LastName: new FormControl('', [Validators.pattern('[a-zA-Z]{2,15}')]),
+      TeleCode: new FormControl(),
+      PhoneNum: new FormControl('', [Validators.pattern('[0-9]{4,13}')]),
+      Address: new FormControl(),
+      LandMark: new FormControl(),
+      PINCode: new FormControl(),
+      Country: new FormControl(),
+      State: new FormControl(),
+      City: new FormControl(),
+
+    },
+    [CustomValidators.MatchValidator('password', 'confirmPassword')]
+  );
+
+  creatAccount() {
+    this.loadingHide = !this.loadingHide
+    this.apiService.uploadImage(this.profilePic)
+    .subscribe({
+      next:(res) => {
+        const resurl = `https://localhost:7239/resources/${res.fileName}`;
+        const user = { ...this.signupForm.value, picture: resurl};
+        if (res.results) {
+        this.auth.signup(user).subscribe({
+          next:(res) => {
+            this.toastr.success(res.message);
+            this.loadingHide = !this.loadingHide
+            this.route.navigate([''])
+          },
+          error: (err) => {
+            this.loadingHide = !this.loadingHide
+            this.toastr.error(err?.error.message);
+          }
+        });
+        }
+      },
+      error: (err) => {
+        this.loadingHide = !this.loadingHide
+        console.log(err);
+      }
+    });
+  }
+
+  get email() {
+    return this.signupForm.get('email');
+  }
+  get password() {
+    return this.signupForm.get('password');
+  }
+
+  get confirmPassword() {
+    return this.signupForm.get('confirmPassword');
+  }
+
+  get passwordMatchError() {
+    return (
+      this.signupForm.getError('mismatch') &&
+      this.signupForm.get('confirmPassword')?.touched
+    );
+  }
+
+  get picture() {
+    return this.signupForm.get('picture');
+  }
+
+  get dateOfBirth() {
+    return this.signupForm.get('dateOfBirth');
+  }
+
+  get Age() {
+    return this.age;
+  }
+
+  get Gender() {
+    return this.signupForm.get('Gender');
+  }
+
+  get About(){
+    return this.signupForm.get('About');
+  }
+
+  get Hobbies() {
+    return this.signupForm.get('Hobbies');
+  }
+
+  get FirstName() {
+    return this.signupForm.get('FirstName');
+  }
+
+  get MiddleName() {
+    return this.signupForm.get('MiddleName');
+  }
+
+  get LastName() {
+    return this.signupForm.get('LastName');
+  }
+
+  get TeleCode() {
+    return this.signupForm.get('TeleCode');
+  }
+
+  get PhoneNum() {
+    return this.signupForm.get('PhoneNum');
+  }
+
+  get Address() {
+    return this.signupForm.get('Address');
+  }
+
+  get LandMark() {
+    return this.signupForm.get('LandMark');
+  }
+
+  get PINCode() {
+    return this.signupForm.get('PINCode');
+  }
+
+  get Country() {
+    return this.signupForm.get('Country');
+  }
+
+  get State() {
+    return this.signupForm.get('State');
+  }
+
+  get City() {
+    return this.signupForm.get('City');
+  }
+
+  //For Profile Picture
+  Image: any;
+  url: any;
+  profilePic: any;
+  onImageSelected(image: any) {
+    if (image.target.files) {
+      const reader = new FileReader();
+      reader.readAsDataURL(image.target.files[0]);
+      reader.onload = (event: any) => {
+        this.url = event.target.result;
+        const URL = `url(${this.url})`;
+        this.Image = URL;
+      };
+      let fileToUpload = image.target.files[0];
+      const formData = new FormData();
+      formData.append('file', fileToUpload, fileToUpload.name);
+      this.profilePic = formData;
+    }
+  }
+
+  //Hide show Password Toggle
+  hidePassword: boolean = true;
+  togglePasswordVisibility() {
+    this.hidePassword = !this.hidePassword;
+  }
+
+  //For Country Phone code
+  public teleCodes: any = teleCodes;
+  selectedTeleCode: number = this.TeleCode?.value;
+
+  //For Age Calculation
+  DOB = this.dateOfBirth?.value;
+  Days: any;
+  age: any;
+  minDate = '1930-01-01';
+  maxDate = '';
+
+  FYEDate: any;
+
+  currDate = new Date();
+
+  currentYear = this.currDate.getFullYear();
+  currentMonth = this.currDate.getMonth();
+  currentDay = this.currDate.getDate();
+
+  finalMonth: any;
+  finalDay: any;
+
+  calculateAge(): number {
+    const dateSelected = new Date(this.DOB);
+    const Time = this.currDate.getTime() - dateSelected.getTime();
+    return (this.age =
+      Math.floor(Time / (1000 * 3600 * 24 * 365.25)));
+  }
+
+  // For Hobbies
+  hobbiesList1: Hobbies[] = [];
+  hobbiesList2: Hobbies[] = [];
+  hobbiesList3: Hobbies[] = [];
+
+  getHobbies() {
+    this.hobbiesList1 = [
+      { id: 0, value: 'Writing', isSelected: false },
+      { id: 1, value: 'Blogging', isSelected: false },
+      { id: 2, value: 'Drawing', isSelected: false },
+    ];
+    this.hobbiesList2 = [
+      { id: 3, value: 'Photography', isSelected: false },
+      { id: 4, value: 'Travel', isSelected: false },
+      { id: 5, value: 'Sports', isSelected: false },
+    ];
+    this.hobbiesList3 = [
+      { id: 6, value: 'Reading', isSelected: false },
+      { id: 7, value: 'Singing', isSelected: false },
+      { id: 8, value: 'Dancing', isSelected: false },
+    ];
+  }
+
+  getHobbiesValues(h:any){
+    const isChecked = h.target.checked;
+    const value = h.target.value;
+    if (isChecked){
+      this.HobbiesValues.push(value)
+    }else{
+      const index = this.HobbiesValues.indexOf(value);
+      if(index > -1){
+        this.HobbiesValues.splice(index,1)
+      }
+    }
+  }
+
+  // For CSC Dropdown
+  public countries: any = countries;
+  public states: any = states;
+  selectedCountry: String = this.Country?.value;
+  selectedState: String = this.State?.value;
+  selectedCity: String = this.City?.value;
+  stateList: String[] = [];
+  cityList: String[] = [];
+
+  selectState() {
+    for (let country of countries) {
+      if (country.name === this.selectedCountry) {
+        this.stateList = country.states;
+      }
+    }
+  }
+  selectCity() {
+    for (let state of states) {
+      if (state.name === this.selectedState) {
+        this.cityList = state.cities;
+      }
+    }
+  }
+
+  ngOnInit(): void {
+    //Setting up Profile pic
+    this.Image = 'url(../../../assets/images/defaultProfile.jpeg)';
+
+    //Limiting last Date
+    if (this.currentMonth < 10) {
+      this.finalMonth = '0' + this.currentMonth;
+    } else {
+      this.finalMonth = this.currentMonth;
+    }
+
+    if (this.currentDay < 10) {
+      this.finalDay = '0' + this.currentDay;
+    } else {
+      this.finalDay = this.currentDay;
+    }
+
+    this.FYEDate =
+      this.currentYear - 6 + '-' + this.finalMonth + '-' + this.finalDay;
+    this.maxDate = this.FYEDate;
+
+    //getting Hobbies List
+    this.getHobbies();
+  }
+}
