@@ -1,0 +1,6 @@
+@TestAppProjectADO_HostAddress = http://localhost:5181
+
+GET {{TestAppProjectADO_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
