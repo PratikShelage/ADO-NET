@@ -48,6 +48,13 @@ namespace WebApi.Controllers
             return Ok(data);
         }
 
+        [HttpPost("stiudentdatawiyhoutsort")]
+        public async Task<ActionResult<Student>> Getall([FromBody] int page, int pageSize)
+        {
+            var data = await _studentRepo.GetAllAsyncwithoutSort(page,pageSize);
+            return Ok(data);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] StudentDTO model)
         {

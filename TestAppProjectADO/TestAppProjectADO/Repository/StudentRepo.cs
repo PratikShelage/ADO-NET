@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using TestAppProject.DTO;
 using WebApi.DTO;
+using WebApi.Entities;
 
 namespace Repo.Repository
 {
@@ -129,6 +130,54 @@ namespace Repo.Repository
 
 
         }
+
+        public async Task<IEnumerable<Student>> GetAllAsyncwithoutSort(int page, int pageSize)
+        {
+            try
+            {
+                List<Student> students = new List<Student>();
+
+                using (var connection = new NpgsqlConnection(_cs))
+                {
+
+                    NpgsqlCommand cm = new NpgsqlCommand("SELECT * FROM public.\"get_student_onlypagination_values\"(@page ,@pageSize)", connection);
+                    cm.Parameters.AddWithValue("@page", Convert.ToInt32(page));
+                    cm.Parameters.AddWithValue("@pageSize", Convert.ToInt32(pageSize));
+
+
+                    cm.CommandType = System.Data.CommandType.Text;
+
+
+                    await connection.OpenAsync();
+
+                    using (var sdr = await cm.ExecuteReaderAsync())
+                    {
+                        while (await sdr.ReadAsync())
+                        {
+                            Student student = new Student
+                            {
+                                sid = Convert.ToInt32(sdr["sid1"]),
+                                firstname = sdr["firstname1"].ToString()!,
+                                lastname = sdr["lastname1"].ToString()!,
+                                rollno = Convert.ToInt32(sdr["rollno1"]),
+                                studentclass = sdr["studentclass1"].ToString()!,
+                                presentdate = sdr["presentdate1"].ToString()!,
+                                ispresent = Convert.ToBoolean(sdr["ispresent1"]),
+                                isabsent = Convert.ToBoolean(sdr["isabsent1"])
+                            };
+
+                            students.Add(student);
+                        }
+                    }
+                }
+                return students;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching attendance data: {ex.Message}", ex);
+            }
+        }
+
         public async Task<Student> GetByIdAsync(int id)
         {
             try
@@ -273,5 +322,3 @@ namespace Repo.Repository
     }
 }
 
-//after click of view button open one model with all data of student with readonly with bydefault image make it proper se proper color and background color with shodow use bootstrap
-//frist i want to create one filter button with icon after click filter button open model with from and to Date filter with save and close  aloso add the one name and roll number input field and in table change name Date to Addmission date and remove the present absent feild add one feild with view with eye icon after click view icon open model with student profile with all data make it proper with alignment and add proper color and showdoe backgorund color and im also sending the css so you and imporve the css and aslo use bootstrap

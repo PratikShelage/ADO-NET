@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 using System.Data;
 using System.Net;
+using WebApi.Entities;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -43,6 +44,19 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 //ispresent bool ,
 //isabsent bool
 //)
+
+//create table attendance (
+//aid int not null,
+//firstname text not null,
+//lastname text not null,
+//rollno int not null,
+//studentclass text not null,
+//presentdate timestamp without time zone not null,
+//ispresent bool ,
+//isabsent bool
+//)
+
+//drop table attendance
 
 //drop table student
 
@@ -384,6 +398,40 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 //END;
 //$$;
 
+
+
+//CREATE OR REPLACE FUNCTION public.get_student_onlypagination_values(
+//    page INT,
+//    pageSize INT DEFAULT 1
+//)
+//RETURNS TABLE(
+//    sid1 INT,
+//    firstname1 TEXT,
+//    lastname1 TEXT,
+//    rollno1 INT,
+//    studentclass1 TEXT,
+//    presentdate1 TEXT,
+//    ispresent1 BOOLEAN,
+//    isabsent1 BOOLEAN
+//)
+//LANGUAGE plpgsql AS
+//$$
+//BEGIN
+//RETURN QUERY
+//EXECUTE format(
+//   '
+//    SELECT sid, firstname, lastname, rollno, studentclass, presentdate::text, ispresent, isabsent
+//    FROM student
+//    LIMIT %s OFFSET %s
+//    ',
+
+//    pageSize,
+//    (page - 1) * pageSize
+//);
+//END;
+//$$;
+//select* from public.get_student_onlypagination_values(2, 5);
+
 //DROP FUNCTION IF EXISTS public.get_student_values;
 //select* from public.get_student_values(1, 5, 0, '', 'Desc', '', '2025-01-01', '2025-09-25', true, false)
 //select* from student
@@ -462,3 +510,79 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 // select* from public.delete_student(5)
 // SELECT* FROM pg_proc WHERE proname = 'create_student';
+
+
+
+//--attendance------------------------------------------ -
+
+//   create or replace function public.create_attendance(aid int, firstname text, lastname text, rollno int, studentclass text, presentdate text, ispresent boolean, isabsent boolean)
+//returns void
+// language plpgsql
+// as $$
+//declare
+//	n_presentdate timestamp without time zone;
+//begin
+//    n_presentdate := presentdate::timestamp without time zone;
+//insert into attendance (aid, firstname, lastname, rollno, studentclass, presentdate, ispresent, isabsent)values(aid, firstname, lastname, rollno, studentclass, n_presentdate, ispresent, isabsent);
+//end;
+//$$
+// drop function public.create_attendance
+
+
+
+
+//CREATE OR REPLACE FUNCTION public.getall_attendance_values(
+//    page INT,
+//    pageSize INT DEFAULT 1
+//)
+//RETURNS TABLE(
+//    aid1 INT,
+//    firstname1 TEXT,
+//    lastname1 TEXT,
+//    rollno1 INT,
+//    studentclass1 TEXT,
+//    presentdate1 TEXT,
+//    ispresent1 BOOLEAN,
+//    isabsent1 BOOLEAN
+//)
+//LANGUAGE plpgsql AS
+//$$
+//BEGIN
+//    RETURN QUERY
+//    EXECUTE format(
+//        '
+//        SELECT aid, firstname, lastname, rollno, studentclass, presentdate::text, ispresent, isabsent
+//        FROM attendance
+//        ORDER BY presentdate DESC
+//        LIMIT %s OFFSET %s
+//        ',
+//        pageSize,
+//        (page - 1) * pageSize
+//    );
+//END;
+//$$;
+
+
+//CREATE OR REPLACE FUNCTION public.getall_attendance_values_without_pagination()
+//RETURNS TABLE(
+//    aid1 INT,
+//    firstname1 TEXT,
+//    lastname1 TEXT,
+//    rollno1 INT,
+//    studentclass1 TEXT,
+//    presentdate1 TEXT,
+//    ispresent1 BOOLEAN,
+//    isabsent1 BOOLEAN
+//)
+//LANGUAGE plpgsql AS
+//$$
+//BEGIN
+//    RETURN QUERY  SELECT aid, firstname, lastname, rollno, studentclass, presentdate::text, ispresent, isabsent
+//        FROM attendance order by presentdate Desc;
+
+//END;
+//$$;
+//select* from attendance
+//select * from public.getall_attendance_values_without_pagination()
+//drop function public.getall_attendance_values
+    

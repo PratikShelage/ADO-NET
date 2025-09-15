@@ -55,6 +55,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IStudenRepo,StudentRepo>();
 builder.Services.AddScoped<IUserRepo, UserRepo>();
+builder.Services.AddScoped<IAttendance, AttendanceRepo>();
 builder.Services.AddScoped<JwtSettings>();
 builder.Services.AddScoped<PasswordHashing>();
 

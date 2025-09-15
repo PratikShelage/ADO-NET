@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TestAppProject.DTO;
 using WebApi.DTO;
+using WebApi.Entities;
 
 namespace Repo.IRepositoy
 {
@@ -14,6 +15,8 @@ namespace Repo.IRepositoy
         Task<Student> GetByIdAsync(int id);
         Task<IEnumerable<Student>> GetAllAsync(DesignDTO model);
         Task<IEnumerable<Student>> GetAllStudent();
+
+        Task<IEnumerable<Student>> GetAllAsyncwithoutSort(int page, int pageSize);
 
         Task AddAsync(StudentDTO model);
         Task UpdateAsync(int id,StudentDTO model);
