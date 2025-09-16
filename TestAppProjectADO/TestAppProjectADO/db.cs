@@ -1,14 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Collections.Generic;
-using System.Data;
-using System.Net;
-using WebApi.Entities;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-//create table users (
+﻿//create table users (
 //id int generated always as identity primary key,
 //profilepic jsonb not null ,
 //email text not null,
@@ -115,7 +105,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 //select* from users
 
-
+//--------------------------------------------get users with pagination--------------------------------------------
 
 //create or replace function public.get_user_values(page INT, pageSize Int default 1, totalPages int default 5, sortByName text default 'id', sortByType text default 'desc', searchByName text default 'id', StartDate text default '', EndDate text default '')
 //returns table(id1 int, profilepic1 jsonb, email1 text, password1 text, dob1 text, age1 text, gender1 text, about1 text, hobbies1 text[],
@@ -165,7 +155,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 //drop function public.get_user_values()
 
-
+//--------------------------------------------get users without pagination--------------------------------------------
 
 // create or replace function public.getall_user_values()
 //returns table(id1 int, profilepic1 jsonb, email1 text, password1 text, dob1 text, age1 text, gender1 text, about1 text, hobbies1 text[],
@@ -186,8 +176,9 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 
+//--------------------------------------------get user with id--------------------------------------------
 
-
+    
 //create or replace function public.get_user_byid(uid int)
 //returns table(id1 int, profilepic1 jsonb, email1 text, password1 text, dob1 text, age1 text, gender1 text, about1 text, hobbies1 text[],
 //    firstname1 text, middlename1 text, lastname1 text, phoneno1 text, address1 text, landmark1 text,
@@ -206,11 +197,13 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 // drop function public.get_user_byid
 // select * from  public.get_user_byid(1);
 
+//--------------------------------------------Create user--------------------------------------------
 
 
-//create or replace function public.create_user(profilepic jsonb, email text, password text, dob text, age text, gender text, about text, hobbies text[],
-//   firstname text, middlename text, lastname text, phoneno text, address text, landmark text,
-//   pincode text, country text, state text, city text, role text, resetpasswordtoken text, resetpasswordexpiry text)
+
+// create or replace function public.create_user(profilepic jsonb, email text, password text, dob text, age text, gender text, about text, hobbies text[],
+//    firstname text, middlename text, lastname text, phoneno text, address text, landmark text,
+//    pincode text, country text, state text, city text, role text, resetpasswordtoken text, resetpasswordexpiry text)
 //returns void
 // language plpgsql
 // as $$
@@ -240,7 +233,9 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 
+//    --------------------------------------------Update User--------------------------------------------
 
+    
 // create or replace function public.update_user(u_id int, u_profilepic jsonb, u_email text, u_password text, u_dob text, u_age text, u_gender text, u_about text, u_hobbies text[],
 //    u_firstname text, u_middlename text, u_lastname text, u_phoneno text, u_address text, u_landmark text,
 //    u_pincode text, u_country text, u_state text, u_city text, u_role text, u_resetpasswordtoken text, u_resetpasswordexpiry text)
@@ -276,6 +271,8 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 //  select* from users 
     
+//  --------------------------------------------Delete user--------------------------------------------
+
  
 //create or replace function public.delete_user(u_id int)
 //returns void
@@ -313,6 +310,9 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 //    isPresent boolean,
 //    isAbsent boolean  
 // )
+ 
+// --------------------------------------------get student with pagination--------------------------------------------
+
  
 //CREATE OR REPLACE FUNCTION public.get_student_values(
 //    page INT,
@@ -398,6 +398,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 //END;
 //$$;
 
+//--------------------------------------------get student withonly pagination--------------------------------------------
 
 
 //CREATE OR REPLACE FUNCTION public.get_student_onlypagination_values(
@@ -435,6 +436,10 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 //DROP FUNCTION IF EXISTS public.get_student_values;
 //select* from public.get_student_values(1, 5, 0, '', 'Desc', '', '2025-01-01', '2025-09-25', true, false)
 //select* from student
+
+//--------------------------------------------get all student--------------------------------------------
+
+
 //CREATE OR REPLACE FUNCTION public.getall_student_values()
 //RETURNS TABLE(sid1 INT, firstname1 TEXT, lastname1 TEXT, rollno1 INT, studentclass1 TEXT, presentdate1 TEXT, ispresent1 BOOLEAN, isabsent1 BOOLEAN)
 //LANGUAGE plpgsql AS
@@ -444,7 +449,10 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 //END;
 //$$;
 
-//create or replace function public.get_student_byid(id int)
+//--------------------------------------------get Student by id--------------------------------------------
+
+
+// create or replace function public.get_student_byid(id int)
 //returns table(sid1 int, firstname1 text, lastname1 text, rollno1 int, studentclass1 text, presentdate1 text, ispresent1 boolean, isabsent1 boolean)
 // language plpgsql
 // as $$
@@ -458,6 +466,10 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 // select * from get_student_byid(1)
  
 // select * from student
+ 
+// --------------------------------------------Create Student--------------------------------------------
+
+ 
 //  create or replace function public.create_student(firstname text, lastname text, rollno int, studentclass text, presentdate text, ispresent boolean, isabsent boolean)
 //returns void
 // language plpgsql
@@ -474,8 +486,9 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 //  drop function public.create_student
 // select * from public.create_student('sham', 'doe', 101, '10a', '2025-09-08', true, false)
 
+// --------------------------------------------Update Student--------------------------------------------
 
-
+ 
 //create or replace function public.update_student(id1 int, firstname1 text, lastname1 text, rollno1 int, studentclass1 text, presentdate1 text, ispresent1 boolean, isabsent1 boolean)
 //returns void
 // language plpgsql
@@ -496,7 +509,8 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 //select* from student
  
- 
+// --------------------------------------------Delete User--------------------------------------------
+
 // create or replace function public.delete_student(id1 int)
 //returns void
 // language plpgsql
@@ -513,7 +527,10 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 
-//--attendance------------------------------------------ -
+//-------------------------------------------------------attendance------------------------------------------ -
+// --------------------------------------------Create Attendence--------------------------------------------
+
+
 
 //   create or replace function public.create_attendance(aid int, firstname text, lastname text, rollno int, studentclass text, presentdate text, ispresent boolean, isabsent boolean)
 //returns void
@@ -529,11 +546,13 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 // drop function public.create_attendance
 
 
+//--------------------------------------------get attendence with pagination--------------------------------------------
 
-
+ 
 //CREATE OR REPLACE FUNCTION public.getall_attendance_values(
 //    page INT,
-//    pageSize INT DEFAULT 1
+//    pageSize INT DEFAULT 1,
+//    attendancesearch TEXT DEFAULT NULL
 //)
 //RETURNS TABLE(
 //    aid1 INT,
@@ -547,20 +566,36 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 //)
 //LANGUAGE plpgsql AS
 //$$
+//DECLARE
+//    n_presentdate TIMESTAMP WITHOUT TIME ZONE;
 //BEGIN
-//    RETURN QUERY
+
+//    IF attendancesearch IS NOT NULL THEN
+//        n_presentdate := attendancesearch::timestamp without time zone;
+//END IF;
+
+
+//RETURN QUERY
 //    EXECUTE format(
 //        '
 //        SELECT aid, firstname, lastname, rollno, studentclass, presentdate::text, ispresent, isabsent
 //        FROM attendance
+//        WHERE (%L IS NULL OR presentdate = %L)
 //        ORDER BY presentdate DESC
 //        LIMIT %s OFFSET %s
 //        ',
-//        pageSize,
+//        attendancesearch,
+//    n_presentdate,
+//    pageSize,
 //        (page - 1) * pageSize
 //    );
 //END;
 //$$;
+
+
+//select* from public.getall_attendance_values(1, 5, '2025-09-14')
+//drop function public.getall_attendance_values;
+//--------------------------------------------get users without pagination--------------------------------------------
 
 
 //CREATE OR REPLACE FUNCTION public.getall_attendance_values_without_pagination()
