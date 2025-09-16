@@ -7,7 +7,7 @@ namespace WebApi.IRepositoy
 {
     public interface IAttendance
     {
-        Task<IEnumerable<Attendance>> GetAllAsync(int page, int pageSize);
+        Task<IEnumerable<Attendance>> GetAllAsync(int page, int pageSize,string attendancesearch);
         Task AddAsync(Attendance model);
 
         Task<IEnumerable<Attendance>> GetAllAttendanceAsync();

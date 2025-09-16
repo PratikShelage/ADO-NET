@@ -27,7 +27,7 @@ namespace WebApi.Controllers
             var fullDetails = await _studentRepo.GetAllStudent();
             var count = fullDetails.Count();
             var presentCounts = fullDetails.Where(a => a.ispresent == true).Count();
-            var absentCounts = fullDetails.Where(a => a.isabsent == true).Count();
+            var absentCounts = fullDetails.Where(a => a.isabsent == true &&  Convert.ToDateTime(a.presentdate)==Convert.ToDateTime(DateTime.Today)).Count();
 
 
             var response = new
@@ -51,8 +51,19 @@ namespace WebApi.Controllers
         [HttpPost("stiudentdatawiyhoutsort")]
         public async Task<ActionResult<Student>> Getall([FromBody] int page, int pageSize)
         {
+            var fullDetails = await _studentRepo.GetAllStudent();
+            var count = fullDetails.Count();
             var data = await _studentRepo.GetAllAsyncwithoutSort(page,pageSize);
-            return Ok(data);
+   
+
+
+            var response = new
+            {
+                counts = count,
+                userValue = data
+
+            };
+            return Ok(response);
         }
 
         [HttpPost]

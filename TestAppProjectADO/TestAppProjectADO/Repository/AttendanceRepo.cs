@@ -18,17 +18,18 @@ namespace WebApi.Repository
             _cs = _config.GetConnectionString("DefaultConnection")!;
 
         }
-        public async Task<IEnumerable<Attendance>> GetAllAsync(int page, int pageSize)
+        public async Task<IEnumerable<Attendance>> GetAllAsync(int page, int pageSize , string attendancesearch)
         {
             try
             {
                 var attendances = new List<Attendance>();
 
                 using var connection = new NpgsqlConnection(_cs);
-                using var cmd = new NpgsqlCommand("SELECT * FROM public.\"getall_attendance_values\"(@page, @pageSize)", connection);
+                using var cmd = new NpgsqlCommand("SELECT * FROM public.\"getall_attendance_values\"(@page, @pageSize,@attendancesearch)", connection);
 
                 cmd.Parameters.AddWithValue("@page", page);
                 cmd.Parameters.AddWithValue("@pageSize", pageSize);
+                cmd.Parameters.AddWithValue("@attendancesearch", attendancesearch);
                 cmd.CommandType = System.Data.CommandType.Text;
 
                 await connection.OpenAsync();
